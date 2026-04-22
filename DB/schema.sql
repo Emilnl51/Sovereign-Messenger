@@ -1,17 +1,12 @@
 show databases;
-
 create database sovereign_messenger;
-
 use sovereign_messenger;
-
 Show tables;
-
 create table users (
 	userID int auto_increment primary key,
 	userName varchar(50) not null unique,
 	passwordHash varchar(255) not null
 );
-
 create table messages (
 	messageID int auto_increment primary key,
     senderID int not null,

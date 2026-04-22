@@ -1,3 +1,5 @@
+package com.sovereignmessenger.server;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -9,11 +11,13 @@ public class DatabaseConnector {
     private Connection dbConnection = null;
     public DatabaseConnector() {
         Properties prop = new Properties();
-        try {
-            prop.load(new FileInputStream("config.properties"));
+        try (FileInputStream fis = new FileInputStream(".env")){
+            System.out.println("DEBUG: Java letar efter .env i: " + new java.io.File(".").getAbsolutePath());
+            prop.load(fis);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
+            System.out.println("Could not load environment variables from file");
             e.printStackTrace();
+            System.exit(1);
         }
         String dbURL = prop.getProperty("DB_URL");
         String user = prop.getProperty("DB_USER");
@@ -24,6 +28,11 @@ public class DatabaseConnector {
         }
         catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
+            System.exit(1);
         }
+    }
+
+    public Connection getConnection() {
+        return dbConnection;
     }
 }
