@@ -1,12 +1,14 @@
 package com.sovereignmessenger.client.core;
 
 import java.awt.CardLayout;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import com.sovereignmessenger.client.view.ChatView;
 import com.sovereignmessenger.client.view.LoginView;
+import com.sovereignmessenger.common.UserDTO;
 
 
 
@@ -21,25 +23,27 @@ public class ViewController extends JFrame {
 
     ViewUpdateListener currentView = null;
 
-    public ViewController(NetworkController networkController) {
+    private ChatModel chatModel = null;
+
+    public ViewController(NetworkController networkController, ChatModel model) {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setTitle("Welcome to Sovereign Messenger");
-
         setSize(1000, 1000);
 
         card = new CardLayout();
         mainContainer = new JPanel(card);
+        this.networkController = networkController;
+        this.chatModel = model;
 
         loginView = new LoginView(this);
-        chatView = new ChatView(this);
+        chatView = new ChatView(this, chatModel);
 
         mainContainer.add(loginView, "LOGIN");
         mainContainer.add(chatView, "CHAT");
-        this.networkController = networkController;
-
         add(mainContainer);
         setLoginView();
+        // setChatView();
     }
 
     public void setLoginView() {
@@ -55,5 +59,9 @@ public class ViewController extends JFrame {
 
     public void login(String userName, String password) {
         networkController.loginAttempt(userName, password);
+    }
+
+    public void updateOnlineUsers(ArrayList<UserDTO> onlineUsers) {
+        chatView.updateOnlineUsers(onlineUsers);
     }
 }

@@ -1,28 +1,27 @@
 package com.sovereignmessenger.server;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.sovereignmessenger.common.User;
 
 public class ClientRegistry {
-    private ArrayList<User> loggedInUsers = null;
+    private HashMap<String, User> loggedInUsers = null;
 
     public ClientRegistry() {
-        loggedInUsers = new ArrayList<User>();
+        loggedInUsers = new HashMap<String, User>();
     }
 
     public void addOnlineUser(User user) {
         user.setOnline(true);
-        loggedInUsers.add(user);
+        loggedInUsers.put(user.getUserName(), user);
     }
 
     public void setUserOffline(User user) {
         user.setOnline(false);
-        loggedInUsers.remove(user);
+        loggedInUsers.remove(user.getUserName());
     }
 
-    public ArrayList<User> getLoggedInUsers() {
+    public HashMap<String, User> getLoggedInUsers() {
         return loggedInUsers;
     }
-
 }

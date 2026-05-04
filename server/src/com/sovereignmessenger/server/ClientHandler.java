@@ -12,6 +12,7 @@ import com.sovereignmessenger.common.LogoutPacket;
 import com.sovereignmessenger.common.MessagePacket;
 import com.sovereignmessenger.common.NetworkPacket;
 import com.sovereignmessenger.common.User;
+import com.sovereignmessenger.common.UserListPacket;
 
 public class ClientHandler extends Thread{
     private Socket socket = null;
@@ -79,13 +80,17 @@ public class ClientHandler extends Thread{
             System.out.println("User: " + packet.getUserName() + " logged in");
             user = new User(packet.getUserName());
             registry.addOnlineUser(user);
-            LoginResponse response = new LoginResponse(true);
+            LoginResponse response = new LoginResponse(true, user.getUserName());
             sendPacket(response);
-
+            sendOnlineUsers();
             //TODO: Send online Users
-            // UserListPacket onlineUsersPacket = new UserListPacket();
         }
     }
+
+    private void sendOnlineUsers() {
+        UserListPacket onlineUsersPacket = new UserListPacket(registry.getLoggedInUsers().values());
+        sendPacket(onlineUsersPacket);
+    } 
 
     private void sendPacket(NetworkPacket packet) {
         try {

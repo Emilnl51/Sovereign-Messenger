@@ -1,7 +1,7 @@
 package com.sovereignmessenger.common;
 import java.io.Serializable;
 
-public class NetworkPacket implements Serializable{
+public class NetworkPacket implements Serializable {
     private String type;
 
     public NetworkPacket() {

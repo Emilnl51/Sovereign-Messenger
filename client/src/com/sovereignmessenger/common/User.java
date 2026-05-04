@@ -7,7 +7,8 @@ public class User {
     private boolean isOnline;
     // private String friends;
 
-    // public User(String userName, String publicKey, String email, boolean isOnline) {
+    // public User(String userName, String publicKey, String email, boolean
+    // isOnline) {
 
     // }
 
@@ -35,4 +36,7 @@ public class User {
         return isOnline;
     }
 
+    // public UserDTO getUserDTO() {
+    //     return new UserDTO(userName, publicKey.getBytes());
+    // }
 }

@@ -8,6 +8,7 @@ import java.net.Socket;
 import com.sovereignmessenger.common.LoginPacket;
 import com.sovereignmessenger.common.LoginResponse;
 import com.sovereignmessenger.common.NetworkPacket;
+import com.sovereignmessenger.common.UserListPacket;
 
 public class NetworkController {
     private final String ipAddress = "127.0.0.1";
@@ -17,8 +18,10 @@ public class NetworkController {
     private Socket socket = null;
     private ObjectOutputStream out = null;
     private ObjectInputStream in = null;
+
+    private ChatModel chatModel = null;
     
-    public NetworkController() {
+    public NetworkController(ChatModel model) {
         try {
             socket = new Socket(ipAddress, port);
             out = new ObjectOutputStream(socket.getOutputStream());
@@ -32,6 +35,7 @@ public class NetworkController {
         ServerListeningThread task = new ServerListeningThread(this, in);
         Thread liThread = new Thread(task);
         liThread.start();
+        this.chatModel = model;
     }
 
     public void setViewController(ViewController viewController) {
@@ -46,9 +50,14 @@ public class NetworkController {
         sendMessage(packet);
     }
 
+    public void updateOnlineUsers(UserListPacket onlineUsers) {
+        viewController.updateOnlineUsers(onlineUsers.getOnlineUsers());
+    }
+
     public void handleLoginResponse(LoginResponse response) {
         if (response.getSuccess()) {
             viewController.setChatView();
+            chatModel.setLoggedInUser(response.getUserName());
         }
     }
 

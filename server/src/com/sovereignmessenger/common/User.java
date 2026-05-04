@@ -12,7 +12,7 @@ public class User {
     // }
 
     public User(String userName) {
-
+        this.userName = userName;
     }
 
     public void setOnline(boolean online) {
@@ -35,4 +35,7 @@ public class User {
         return isOnline;
     }
 
+    // public UserDTO getUserDTO() {
+    //     return new UserDTO(userName, publicKey.getBytes()); 
+    // }
 }
