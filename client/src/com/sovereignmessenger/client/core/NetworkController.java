@@ -61,6 +61,14 @@ public class NetworkController {
         }
     }
 
+    public void disconnect() {
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void sendMessage(NetworkPacket packet) {
         try {
             out.writeObject(packet);

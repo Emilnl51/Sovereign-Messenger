@@ -59,6 +59,7 @@ public class ClientHandler extends Thread{
             System.out.println("SERVER ERROR: " + e.getMessage());
             e.printStackTrace();
         } finally {
+            userLoggedOut();
             closeConnection();
         }
     }
@@ -71,7 +72,7 @@ public class ClientHandler extends Thread{
         } else if (packet instanceof MessagePacket) {
 
         } else if (packet instanceof LogoutPacket) {
-            //userLoggedOut(packet.getUser());
+            userLoggedOut();
         }
     }
 
@@ -103,9 +104,9 @@ public class ClientHandler extends Thread{
     }
 
     private void userLoggedOut() {
-        System.out.println("Client disconnected " + socket.getInetAddress());
+        System.out.println("Client disconnected " + socket.getInetAddress() + " " + user.getUserName());
         registry.setUserOffline(user);
-        // this.closeConnection();
+        this.closeConnection();
     }
 
     private void closeConnection() {
@@ -117,7 +118,6 @@ public class ClientHandler extends Thread{
             if (socket != null)
                 socket.close();
         } catch (IOException e) {
-            // Log but don't throw - we're already closing
             System.err.println("Error closing client connection: " + e.getMessage());
         }
     }

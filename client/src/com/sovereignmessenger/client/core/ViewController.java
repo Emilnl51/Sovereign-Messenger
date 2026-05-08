@@ -1,6 +1,8 @@
 package com.sovereignmessenger.client.core;
 
 import java.awt.CardLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -26,7 +28,17 @@ public class ViewController extends JFrame {
     private ChatModel chatModel = null;
 
     public ViewController(NetworkController networkController, ChatModel model) {
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent WindowEvent) {
+                System.out.println("Hanterar oväntad nedstängning");
+
+                networkController.disconnect();
+                System.exit(0);
+            } 
+        });
+
         setLocationRelativeTo(null);
         setTitle("Welcome to Sovereign Messenger");
         setSize(1000, 1000);

@@ -31,6 +31,7 @@ public class ServerListeningThread implements Runnable {
                 }
             }
         } catch (ClassNotFoundException | IOException e) {
+            System.out.println("Client disconnected");
             e.printStackTrace();
         }
     }
