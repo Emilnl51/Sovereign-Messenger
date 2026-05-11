@@ -1,27 +1,37 @@
 package com.sovereignmessenger.server;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.sovereignmessenger.common.User;
-
 public class ClientRegistry {
-    private HashMap<String, User> loggedInUsers = null;
+    private HashMap<String, ClientHandler> onlineClients = null;
 
     public ClientRegistry() {
-        loggedInUsers = new HashMap<String, User>();
+     onlineClients = new HashMap<String, ClientHandler>();
     }
 
-    public void addOnlineUser(User user) {
-        user.setOnline(true);
-        loggedInUsers.put(user.getUserName(), user);
+    public void setClientOnline(ClientHandler client) {
+        // user.setOnline(true);
+     onlineClients.put(client.getUser().getUserName(), client);
     }
 
-    public void setUserOffline(User user) {
-        user.setOnline(false);
-        loggedInUsers.remove(user.getUserName());
+    public void setClientOffline(ClientHandler client) {
+        // user.setOnline(false);
+        onlineClients.remove(client.getUser().getUserName());
     }
 
-    public HashMap<String, User> getLoggedInUsers() {
-        return loggedInUsers;
+    // public HashMap<String, ClientHandler> getOnlineClients() {
+    //     return onlineClients;
+    // }
+
+    public ArrayList<ClientHandler> getOnlineClients() {
+    return new ArrayList<ClientHandler>(onlineClients.values());
+    }
+
+    public boolean isOnline(String user) {
+        if  (onlineClients.containsKey(user)) {
+            return true;
+        }
+        return false;
     }
 }

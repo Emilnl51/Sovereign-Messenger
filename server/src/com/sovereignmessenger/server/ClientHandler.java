@@ -19,15 +19,17 @@ public class ClientHandler extends Thread{
 
     private AccountManager accountManager = null;
     private ClientRegistry registry = null;
+    private ServerController controller = null;
 
     private ObjectInputStream in = null;
     private ObjectOutputStream out = null;
 
     private User user = null;
-    public ClientHandler(Socket socket, AccountManager accountManager, ClientRegistry registry) {
+    public ClientHandler(Socket socket, AccountManager accountManager, ClientRegistry registry, ServerController controller) {
         this.socket = socket;
         this.accountManager = accountManager;
         this.registry = registry;
+        this.controller = controller;
 
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
@@ -36,6 +38,10 @@ public class ClientHandler extends Thread{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public User getUser() {
+        return user;
     }
 
     @Override
@@ -52,9 +58,11 @@ public class ClientHandler extends Thread{
                 }
             }
         } catch (EOFException e) {
-            userLoggedOut();
+            System.out.println("SERVER ERROR: " + e.getMessage());
+            e.printStackTrace();
         } catch (IOException e) {
-
+            System.out.println("SERVER ERROR: " + e.getMessage());
+            e.printStackTrace();
         } catch (ClassNotFoundException e) {
             System.out.println("SERVER ERROR: " + e.getMessage());
             e.printStackTrace();
@@ -80,17 +88,16 @@ public class ClientHandler extends Thread{
         if (accountManager.handleLoginRequest(packet)) {
             System.out.println("User: " + packet.getUserName() + " logged in");
             user = new User(packet.getUserName());
-            registry.addOnlineUser(user);
+            registry.setClientOnline(this);
             LoginResponse response = new LoginResponse(true, user.getUserName());
             sendPacket(response);
-            sendOnlineUsers();
-            //TODO: Send online Users
+            // Broadcasting to all online clients that another is online
+            controller.broadcastOnlineClients();
         }
     }
 
-    private void sendOnlineUsers() {
-        UserListPacket onlineUsersPacket = new UserListPacket(registry.getLoggedInUsers().values());
-        sendPacket(onlineUsersPacket);
+    public void sendOnlineClients(UserListPacket packet) {
+        sendPacket(packet);
     } 
 
     private void sendPacket(NetworkPacket packet) {
@@ -105,7 +112,7 @@ public class ClientHandler extends Thread{
 
     private void userLoggedOut() {
         System.out.println("Client disconnected " + socket.getInetAddress() + " " + user.getUserName());
-        registry.setUserOffline(user);
+        registry.setClientOffline(this);
         this.closeConnection();
     }
 

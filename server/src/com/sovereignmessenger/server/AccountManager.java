@@ -4,14 +4,17 @@ import com.sovereignmessenger.common.LoginPacket;
 
 public class AccountManager {
     private DatabaseManager databaseManager = null; 
-    public AccountManager(DatabaseManager databaseManager) {
+    private ClientRegistry registry = null;
+    public AccountManager(DatabaseManager databaseManager, ClientRegistry registry) {
         this.databaseManager = databaseManager;
+        this.registry = registry;
     }
 
     public boolean handleLoginRequest(LoginPacket loginCredentials) {
         if (loginCredentials.getUserName() != null && loginCredentials.getEncryptedPassword() != null) { 
             String passwordHash = databaseManager.getPasswordHashString(loginCredentials.getUserName());
-            if (loginCredentials.getEncryptedPassword().equals(passwordHash)) {
+            if (loginCredentials.getEncryptedPassword().equals(passwordHash) 
+                && !registry.isOnline(loginCredentials.getUserName())) {
                 return true;
             }
         }
