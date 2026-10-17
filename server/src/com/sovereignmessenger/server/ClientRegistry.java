@@ -10,12 +10,12 @@ public class ClientRegistry {
      onlineClients = new HashMap<String, ClientHandler>();
     }
 
-    public void setClientOnline(ClientHandler client) {
+    public synchronized void setClientOnline(ClientHandler client) {
         // user.setOnline(true);
      onlineClients.put(client.getUser().getUserName(), client);
     }
 
-    public void setClientOffline(ClientHandler client) {
+    public synchronized void setClientOffline(ClientHandler client) {
         // user.setOnline(false);
         onlineClients.remove(client.getUser().getUserName());
     }

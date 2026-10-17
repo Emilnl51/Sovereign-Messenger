@@ -1,3 +1,6 @@
-1. Message logic
+2. Send error message when user type in wrong username or password
+
+3. Message logic
 	1. Encrypt messages 
-2. Searching users
+4. Searching users
+5. The surprise features

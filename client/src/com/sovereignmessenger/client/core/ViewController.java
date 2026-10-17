@@ -31,7 +31,7 @@ public class ViewController extends JFrame {
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(WindowEvent WindowEvent) {
+            public void windowClosing(WindowEvent windowEvent) {
                 System.out.println("Hanterar oväntad nedstängning");
 
                 networkController.disconnect();

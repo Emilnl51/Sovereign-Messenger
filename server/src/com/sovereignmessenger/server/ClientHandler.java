@@ -113,7 +113,8 @@ public class ClientHandler extends Thread{
     private void userLoggedOut() {
         System.out.println("Client disconnected " + socket.getInetAddress() + " " + user.getUserName());
         registry.setClientOffline(this);
-        this.closeConnection();
+        closeConnection();
+        controller.broadcastOnlineClients();
     }
 
     private void closeConnection() {
